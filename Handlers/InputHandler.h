@@ -9,17 +9,19 @@
 #pragma once
 
 #include <stdio.h>
-#include <SFML/Window.hpp>
+#include <memory>
+
+#include <SFML/Graphics.hpp>
 
 class InputHandler
 {    
 public:
-    InputHandler(std::shared_ptr<sf::Window> window);
+    InputHandler(std::shared_ptr<sf::RenderWindow> window);
     ~InputHandler();
     
     //handle function
     void handle(sf::Event event);
     
 private:
-    std::shared_ptr<sf::Window> mWindow;
+    std::shared_ptr<sf::RenderWindow> mWindow;
 };

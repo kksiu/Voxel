@@ -9,10 +9,12 @@
 #pragma once
 
 #include <stdio.h>
+#include <memory>
 
 #include <SFML/Graphics.hpp>
 
 #include "Handlers/InputHandler.h"
+#include "Handlers/ViewManager.h"
 
 class Game
 {
@@ -28,4 +30,5 @@ public:
 private:
     std::shared_ptr<sf::RenderWindow> mWindow;
     std::shared_ptr<InputHandler> mMainInputHandler;
+	std::shared_ptr<ViewManager> mViewManager;
 };

@@ -8,7 +8,7 @@
 
 #include "InputHandler.h"
 
-InputHandler::InputHandler(std::shared_ptr<sf::Window> window)
+InputHandler::InputHandler(std::shared_ptr<sf::RenderWindow> window)
 : mWindow(window)
 {
 }
