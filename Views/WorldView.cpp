@@ -11,7 +11,7 @@ WorldView::WorldView(std::shared_ptr<sf::RenderWindow> window)
 : mWindow(window), mPlayer(std::make_shared<Camera>(), window)
 {
 	float aspect = ((float)window->getSize().x) / ((float)window->getSize().y);
-	mProjectionMatrix = glm::perspective(glm::radians(45.f), aspect, 1.f, 6000.f);
+	mProjectionMatrix = glm::perspective(glm::radians(45.f), aspect, 0.1f, 100.f);
 }
 
 WorldView::~WorldView()
@@ -62,6 +62,8 @@ void WorldView::handle(sf::Event event)
 			{
 				mWindow->close();
 			}
+
+			break;
 		}
 
 		default:

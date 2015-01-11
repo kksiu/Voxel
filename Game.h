@@ -16,6 +16,8 @@
 #include "Handlers/InputHandler.h"
 #include "Handlers/ViewManager.h"
 
+#include "Entities/FPS.h"
+
 class Game
 {
 public:
@@ -31,4 +33,7 @@ private:
     std::shared_ptr<sf::RenderWindow> mWindow;
     std::shared_ptr<InputHandler> mMainInputHandler;
 	std::shared_ptr<ViewManager> mViewManager;
+
+	//calculate FPS
+	FPS fps;
 };

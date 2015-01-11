@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 Kenneth Siu. All rights reserved.
 //
 
-#define GLM_FORCE_RADIANS
 #include "Camera.h"
 
 #include <iostream>

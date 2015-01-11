@@ -8,12 +8,15 @@
 
 #include "Game.h"
 
+#include <iostream>
+
 #include <GL/glew.h>
 
 Game::Game(unsigned int width,
            unsigned int height,
            std::string title,
            sf::ContextSettings settings)
+: fps()
 {
     mWindow = std::make_shared<sf::RenderWindow>(sf::VideoMode(width, height), title, sf::Style::Default, settings);
     mMainInputHandler = std::make_shared<InputHandler>(mWindow);
@@ -70,5 +73,9 @@ void Game::run()
         
         //switch display buffers
         mWindow->display();
+
+		std::cout << fps.getFPS() << std::endl;
+
+		fps.update();
     }
 }
