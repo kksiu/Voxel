@@ -16,7 +16,7 @@
 #include "Handlers/InputHandler.h"
 #include "Handlers/ViewManager.h"
 
-#include "Entities/FPS.h"
+#include "Utils/FPS.h"
 
 class Game
 {

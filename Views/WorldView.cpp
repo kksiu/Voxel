@@ -7,6 +7,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
 
+#include "../Utils/DrawHelper.h"
+
 WorldView::WorldView(std::shared_ptr<sf::RenderWindow> window)
 : mWindow(window), mPlayer(std::make_shared<Camera>(), window)
 {
@@ -35,11 +37,17 @@ void WorldView::render()
 
 	//render objects
 	glColor3f(1.f, 0.f, 1.f);
-	glBegin(GL_QUADS);
-	glVertex3f(-0.5f, 0.5f, -1.f);
-	glVertex3f(0.5f, 0.5f, -1.f);
-	glVertex3f(0.5f, -0.5f, -1.f);
-	glVertex3f(-0.5f, -0.5f, -1.f);
+	
+	//test cube
+	std::vector<glm::vec3> cube = DrawHelper::drawFaces(.1f, glm::vec3(0.f));
+
+	glBegin(GL_TRIANGLES);
+
+	for (glm::vec3 point : cube)
+	{
+		glVertex3fv(glm::value_ptr(point));
+	}
+
 	glEnd();
 }
 
