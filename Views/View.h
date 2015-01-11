@@ -5,7 +5,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Object.h"
+#include "../Entities/Object.h"
 
 class View {
 public:

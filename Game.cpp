@@ -36,6 +36,12 @@ void Game::run()
 	glAlphaFunc(GL_GREATER, 0.001f);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	//enable CCW as front face
+	glFrontFace(GL_CCW);
+
+	// set up the camera for drawing!
+	glEnable(GL_DEPTH_TEST);
+
     //event to use
     sf::Event event;
 
@@ -56,9 +62,9 @@ void Game::run()
 		float dt = deltaClock.restart().asSeconds();
 		mViewManager->update(dt);
 
-        //render window
-        mWindow->clear();
-        
+        //clear window
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         //render world
 		mViewManager->render();
         

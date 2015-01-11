@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 
 #include "View.h"
+#include "../Entities/Player.h"
 
 class WorldView : public View{
 public:
@@ -24,4 +25,7 @@ private:
     
     //projection matrix
     glm::mat4 mProjectionMatrix;
+
+	//player, holding the camera
+	Player mPlayer;
 };
