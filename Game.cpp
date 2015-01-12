@@ -49,6 +49,9 @@ void Game::run()
 	// set up the camera for drawing!
 	glEnable(GL_DEPTH_TEST);
 
+	//enable lighting
+	//glEnable(GL_LIGHTING);
+
     //event to use
     sf::Event event;
 

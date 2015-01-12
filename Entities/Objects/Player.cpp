@@ -77,7 +77,7 @@ void Player::update(float dt)
 	sf::Mouse::setPosition(origPos, *mWindow);
 }
 
-void Player::render()
+void Player::render(glm::mat4& projectionMatrix, glm::mat4& viewMatrix)
 {
 
 }

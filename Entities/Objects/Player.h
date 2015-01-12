@@ -12,7 +12,7 @@
 #include <memory>
 
 #include "Object.h"
-#include "Camera.h"
+#include "../Camera.h"
 
 //special type of camera which has 
 class Player : public Object {
@@ -22,7 +22,7 @@ public:
 
 	//Object functions
     virtual void update(float dt);
-    virtual void render();
+	virtual void render(glm::mat4& projectionMatrix, glm::mat4& viewMatrix);
     virtual void handle(sf::Event event);
     
 	//this will return the camera connected to this player

@@ -33,7 +33,8 @@ void WorldView::render()
 	glLoadIdentity();
 
 	//set the camera
-	glMultMatrixf(glm::value_ptr(mPlayer.getCamera()));
+	glm::mat4 camMatrix = mPlayer.getCamera();
+	glMultMatrixf(glm::value_ptr(camMatrix));
 
 	//render objects
 	glColor3f(1.f, 0.f, 1.f);
@@ -49,6 +50,12 @@ void WorldView::render()
 	}
 
 	glEnd();
+
+	//render everything in object list
+	for (std::shared_ptr<Object> object : mObjectList)
+	{
+		object->render(mProjectionMatrix, camMatrix);
+	}
 }
 
 void WorldView::update(float dt)

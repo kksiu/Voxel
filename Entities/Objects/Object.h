@@ -16,7 +16,7 @@
 class Object {
 public:
     virtual void update(float dt) = 0;
-    virtual void render() = 0;
+	virtual void render(glm::mat4& projectionMatrix, glm::mat4& viewMatrix) = 0;
     virtual void handle(sf::Event event) = 0;
     
     glm::mat4 mModelMatrix;

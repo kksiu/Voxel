@@ -41,8 +41,15 @@ void Chunk::update(float dt)
 {
 }
 
-void Chunk::render()
+void Chunk::render(glm::mat4& projectionMatrix, glm::mat4& viewMatrix)
 {
+	//render the chunk
+
+}
+
+void Chunk::handle(sf::Event event)
+{
+
 }
 
 void Chunk::setChunkSize(int size)

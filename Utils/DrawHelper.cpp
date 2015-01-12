@@ -60,14 +60,14 @@ std::vector<glm::vec3> DrawHelper::drawPlane(glm::vec3 topLeft, glm::vec3 topRig
 	std::vector<glm::vec3> vectorToReturn;
 
 	//needs to go counter clockwise
-	vectorToReturn.push_back(bottomRight);
+	vectorToReturn.push_back(topLeft);
 	vectorToReturn.push_back(topRight);
-	vectorToReturn.push_back(topLeft);
-	
 	vectorToReturn.push_back(bottomRight);
-	vectorToReturn.push_back(topLeft);
+	
 	vectorToReturn.push_back(bottomLeft);
-
+	vectorToReturn.push_back(topLeft);
+	vectorToReturn.push_back(bottomRight);
+	
 	return vectorToReturn;
 }
 

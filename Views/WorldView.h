@@ -6,9 +6,9 @@
 #include <glm/glm.hpp>
 
 #include "View.h"
-#include "../Entities/Player.h"
+#include "../Entities/Objects/Player.h"
 
-class WorldView : public View{
+class WorldView : public View {
 public:
 	WorldView(std::shared_ptr<sf::RenderWindow> window);
 	~WorldView();
