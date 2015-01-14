@@ -28,6 +28,9 @@ void WorldView::render()
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixf(glm::value_ptr(mProjectionMatrix));
 
+//    GLfloat lightpos[] = {.5, 1., 0.5, 1.};
+//    glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
+    
 	//set up camera
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -40,14 +43,15 @@ void WorldView::render()
 	glColor3f(1.f, 0.f, 1.f);
 	
 	//test cube
-	std::vector<glm::vec3> cube = DrawHelper::drawFaces(.1f, glm::vec3(0.f));
+    std::vector<std::vector<glm::vec3>> cube = DrawHelper::drawFaces(.1f, glm::vec3(0.f));
 
 	glBegin(GL_TRIANGLES);
 
-	for (glm::vec3 point : cube)
+    for (size_t i = 0; i < cube[0].size(); i++)
 	{
-		glVertex3fv(glm::value_ptr(point));
-	}
+        glNormal3fv(glm::value_ptr(cube[1][i]));
+		glVertex3fv(glm::value_ptr(cube[0][i]));
+    }
 
 	glEnd();
 

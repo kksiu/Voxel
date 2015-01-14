@@ -70,7 +70,30 @@ void Chunk::update(float dt)
 //based on what is active, update the current chunks
 void Chunk::updateChunks()
 {
+    //check all active blocks and add them to the vertex buffer
+    mVertexBuffer.clear();
     
+    for(size_t i = 0; i < mSize; i++)
+    {
+        for(size_t j = 0; j < mSize; j++)
+        {
+            for(size_t k = 0; k < mSize; k++)
+            {
+                //if the block is active, send to the vertex buffer
+                if(mBlockArray[i][j][k]->getActive())
+                {
+                    
+                }
+            }
+        }
+    }
+    
+    GLsizeiptr size = mVertexBuffer.size() * 3;
+    
+    //at the end, buffer data from both vertex and normal
+    //so that they can be used the next time the chunk is rendered
+    glBufferSubData(mVertexBufferID, 0, size, &mVertexBuffer[0]);
+    glBufferSubData(mNormalBufferID, 0, size, &mNormalBuffer[0]);
 }
 
 void Chunk::render(glm::mat4& projectionMatrix, glm::mat4& viewMatrix)

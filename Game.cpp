@@ -50,7 +50,8 @@ void Game::run()
 	glEnable(GL_DEPTH_TEST);
 
 	//enable lighting
-	//glEnable(GL_LIGHTING);
+//	glEnable(GL_LIGHTING);
+//    glEnable(GL_LIGHT0);
 
     //event to use
     sf::Event event;
