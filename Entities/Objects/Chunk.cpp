@@ -8,8 +8,11 @@
 
 #include "Chunk.h"
 
+#include "../../Handlers/ShaderManager.h"
+
 Chunk::Chunk(int size,
-             std::shared_ptr<sf::RenderWindow> window)
+             std::shared_ptr<sf::RenderWindow> window,
+             std::string shader)
 : mSize(size),
 mWindow(window)
 {
@@ -31,6 +34,29 @@ mWindow(window)
             }
         }
     }
+    
+    //load the shader
+    mShaderID = ShaderManager::getInstance().getGLShader(shader);
+    
+    //set up a vertex buffer with the max size vertices
+    //that would be 8 x size^3
+    uint32_t maxSize = 8 * mSize * mSize * mSize;
+    
+    //now that max size is known, generate a buffer
+    glGenBuffers(1, &mVertexBufferID);
+    glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferID);
+    glBufferData(GL_ARRAY_BUFFER, maxSize,
+                 NULL, GL_DYNAMIC_DRAW);
+    
+    glGenBuffers(1, &mNormalBufferID);
+    glBindBuffer(GL_ARRAY_BUFFER, mNormalBufferID);
+    glBufferData(GL_ARRAY_BUFFER, maxSize, NULL, GL_DYNAMIC_DRAW);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    
+    //get shader information of the projection and view matrix
+    mProjID = glGetUniformLocation(mShaderID, "P");
+    mViewID = glGetUniformLocation(mShaderID, "V");
 }
 
 Chunk::~Chunk()
@@ -41,15 +67,44 @@ void Chunk::update(float dt)
 {
 }
 
+//based on what is active, update the current chunks
+void Chunk::updateChunks()
+{
+    
+}
+
 void Chunk::render(glm::mat4& projectionMatrix, glm::mat4& viewMatrix)
 {
 	//render the chunk
-
+    //bind the shader
+    glUseProgram(mShaderID);
+    
+    //set projection and view matrix
+    glUniformMatrix4fv(mProjID, 1, GL_FALSE, &projectionMatrix[0][0]);
+    glUniformMatrix4fv(mViewID, 1, GL_FALSE, &viewMatrix[0][0]);
+    
+    //use vertex attribute arrays
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferID);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    
+    glEnableVertexAttribArray(1);
+    glBindBuffer(GL_ARRAY_BUFFER, mNormalBufferID);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    
+    //use draw arrays to draw the chunk
+    glDrawArrays(GL_TRIANGLES, 0, mVertexBuffer.size() * 3);
+    
+    //unbind vertex attribute arrays
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    
+    //unbind shader
+    glUseProgram(0);
 }
 
 void Chunk::handle(sf::Event event)
 {
-
 }
 
 void Chunk::setChunkSize(int size)

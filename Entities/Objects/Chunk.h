@@ -12,6 +12,7 @@
 #include <memory>
 
 #include <SFML/Graphics.hpp>
+#include <GL/glew.h>
 
 #include "../Block.h"
 #include "Object.h"
@@ -23,10 +24,11 @@ typedef std::shared_ptr<Block> zBlocks;
 
 class Chunk : public Object {
 public:
-    Chunk(int size, std::shared_ptr<sf::RenderWindow> window);
+    Chunk(int size, std::shared_ptr<sf::RenderWindow> window, std::string shader);
     ~Chunk();
     
     virtual void update(float dt);
+    virtual void updateChunks();
 	virtual void render(glm::mat4& projectionMatrix, glm::mat4& viewMatrix);
 	virtual void handle(sf::Event event);
     
@@ -42,4 +44,20 @@ private:
     int mSize;
     std::shared_ptr<sf::RenderWindow> mWindow;
     Blocks mBlockArray;
+    
+    //OPENGL
+    //vertex buffer
+    std::vector<glm::vec3> mVertexBuffer;
+    GLuint mVertexBufferID;
+    
+    //normal buffer
+    std::vector<glm::vec3> mNormalBuffer;
+    GLuint mNormalBufferID;
+    
+    //shader information
+    GLuint mShaderID;
+    
+    //view and projection matrix
+    GLuint mProjID;
+    GLuint mViewID;
 };
