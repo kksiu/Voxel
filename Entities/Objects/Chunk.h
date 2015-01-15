@@ -41,7 +41,7 @@ public:
     
 private:
     //chunk size
-    int mSize;
+    unsigned int mSize;
     std::shared_ptr<sf::RenderWindow> mWindow;
     Blocks mBlockArray;
     

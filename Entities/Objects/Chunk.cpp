@@ -9,12 +9,14 @@
 #include "Chunk.h"
 
 #include "../../Handlers/ShaderManager.h"
+#include "../../Utils/DrawHelper.h"
 
 Chunk::Chunk(int size,
              std::shared_ptr<sf::RenderWindow> window,
              std::string shader)
 : mSize(size),
-mWindow(window)
+mWindow(window),
+mModelMatrix(glm::mat4(1.f))
 {
     //create the block array
     mBlockArray = Blocks();
@@ -57,6 +59,8 @@ mWindow(window)
     //get shader information of the projection and view matrix
     mProjID = glGetUniformLocation(mShaderID, "P");
     mViewID = glGetUniformLocation(mShaderID, "V");
+    
+    updateChunks();
 }
 
 Chunk::~Chunk()
@@ -72,18 +76,75 @@ void Chunk::updateChunks()
 {
     //check all active blocks and add them to the vertex buffer
     mVertexBuffer.clear();
+    mNormalBuffer.clear();
     
-    for(size_t i = 0; i < mSize; i++)
+    //last index
+    unsigned int lastIndex = mSize - 1;
+    
+    for(size_t x = 0; x < mSize; x++)
     {
-        for(size_t j = 0; j < mSize; j++)
+        for(size_t y = 0; y < mSize; y++)
         {
-            for(size_t k = 0; k < mSize; k++)
+            for(size_t z = 0; z < mSize; z++)
             {
                 //if the block is active, send to the vertex buffer
-                if(mBlockArray[i][j][k]->getActive())
+                if(!mBlockArray[x][y][z]->getActive())
                 {
-                    
+                    continue;
                 }
+                
+                //set a bool for each side and see if it needs to be rendered
+                bool top, bottom, left, right, front, back;
+                top = bottom = left = right = front = back = false;
+                
+                //check top
+                if((y == lastIndex) || (!mBlockArray[x][y+1][z]->getActive()))
+                {
+                    top = true;
+                }
+                
+                //check bottom
+                if((y == 0) || (!mBlockArray[x][y-1][z]->getActive()))
+                {
+                    bottom = true;
+                }
+                
+                //check left
+                if((x == 0) || (!mBlockArray[x-1][y][z]->getActive()))
+                {
+                    left = true;
+                }
+                
+                //check right
+                if((x == lastIndex) || (!mBlockArray[x+1][y][z]->getActive()))
+                {
+                    right = true;
+                }
+                
+                //check front
+                if((z == 0) || (!mBlockArray[x][y][z-1]->getActive()))
+                {
+                    front = true;
+                }
+                
+                //check back
+                if((z == lastIndex) || (!mBlockArray[x][y][z+1]->getActive()))
+                {
+                    back = true;
+                }
+                
+                //if no need to render any side
+                if(!(top || bottom || left || right || front || back))
+                {
+                    continue;
+                }
+                
+                std::vector<std::vector<glm::vec3>> verticesAndNormals = DrawHelper::drawFaces(0.5f, glm::vec3(x, y, z), top, bottom, left, right, front, back);
+                
+                //add to vertex and normal buffer
+                mVertexBuffer.insert(mVertexBuffer.end(), verticesAndNormals[0].begin(), verticesAndNormals[0].end());
+                mNormalBuffer.insert(mNormalBuffer.end(), verticesAndNormals[1].begin(), verticesAndNormals[1].end());
+                
             }
         }
     }
