@@ -20,9 +20,12 @@ Game::Game(unsigned int width,
 {
     mWindow = std::make_shared<sf::RenderWindow>(sf::VideoMode(width, height), title, sf::Style::Default, settings);
 
-	if (!glewInit())
+	GLenum error = glewInit();
+
+	//check if glew init has failed
+	if (GLEW_OK != error)
 	{
-		exit(EXIT_FAILURE);
+		std::cout << "Error with GLEW: " << glewGetErrorString(error) << std::endl;
 	}
 
     mMainInputHandler = std::make_shared<InputHandler>(mWindow);
