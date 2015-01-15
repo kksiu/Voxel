@@ -19,6 +19,12 @@ Game::Game(unsigned int width,
 : fps()
 {
     mWindow = std::make_shared<sf::RenderWindow>(sf::VideoMode(width, height), title, sf::Style::Default, settings);
+
+	if (!glewInit())
+	{
+		exit(EXIT_FAILURE);
+	}
+
     mMainInputHandler = std::make_shared<InputHandler>(mWindow);
 	mViewManager = std::make_shared<ViewManager>(mWindow);
 }
@@ -29,12 +35,6 @@ Game::~Game()
 
 void Game::run()
 {
-	//enable GLEW
-	if(!glewInit())
-    {
-        exit(EXIT_FAILURE);
-    }
-
 	//Enable OpenGL functions
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);

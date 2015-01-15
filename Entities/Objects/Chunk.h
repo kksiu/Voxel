@@ -11,8 +11,8 @@
 #include <stdio.h>
 #include <memory>
 
-#include <SFML/Graphics.hpp>
 #include <GL/glew.h>
+#include <SFML/Graphics.hpp>
 
 #include "../Block.h"
 #include "Object.h"
