@@ -20,7 +20,6 @@
 typedef std::vector<std::vector<std::vector<std::shared_ptr<Block>>>> Blocks;
 typedef std::vector<std::vector<std::shared_ptr<Block>>> xBlocks;
 typedef std::vector<std::shared_ptr<Block>> yBlocks;
-typedef std::shared_ptr<Block> zBlocks;
 
 class Chunk : public Object {
 public:

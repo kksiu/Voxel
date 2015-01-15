@@ -18,7 +18,7 @@ enum class BlockType {
 //includes any block in the world
 class Block {
 public:
-    Block();
+    Block(bool active = false);
     ~Block();
     
     void setActive(bool active);

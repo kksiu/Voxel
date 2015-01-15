@@ -10,7 +10,7 @@
 #include "../Utils/DrawHelper.h"
 
 WorldView::WorldView(std::shared_ptr<sf::RenderWindow> window)
-: mWindow(window), mPlayer(std::make_shared<Camera>(), window)
+: mWindow(window), mPlayer(std::make_shared<Camera>(), window), testChunk(16, window, "Shader")
 {
 	float aspect = ((float)window->getSize().x) / ((float)window->getSize().y);
 	mProjectionMatrix = glm::perspective(glm::radians(45.f), aspect, 0.1f, 100.f);

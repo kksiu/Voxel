@@ -30,7 +30,10 @@ Game::~Game()
 void Game::run()
 {
 	//enable GLEW
-	glewInit();
+	if(!glewInit())
+    {
+        exit(EXIT_FAILURE);
+    }
 
 	//Enable OpenGL functions
 	glEnable(GL_TEXTURE_2D);

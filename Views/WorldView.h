@@ -7,6 +7,7 @@
 
 #include "View.h"
 #include "../Entities/Objects/Player.h"
+#include "../Entities/Objects/Chunk.h"
 
 class WorldView : public View {
 public:
@@ -28,4 +29,6 @@ private:
 
 	//player, holding the camera
 	Player mPlayer;
+    
+    Chunk testChunk;
 };

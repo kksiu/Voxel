@@ -8,18 +8,21 @@
 
 #include "Block.h"
 
-Block::Block() {
-    mActive = false;
+Block::Block(bool active)
+: mActive(active)
+{
 }
 
-Block::~Block() {
-    
+Block::~Block()
+{
 }
 
-void Block::setActive(bool active) {
+void Block::setActive(bool active)
+{
     mActive = active;
 }
 
-bool Block::getActive() {
+bool Block::getActive()
+{
     return mActive;
 }

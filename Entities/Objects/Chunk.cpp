@@ -22,17 +22,17 @@ mModelMatrix(glm::mat4(1.f))
     mBlockArray = Blocks();
     
     //iterate through all and make a block at each one
-    for(int i = 0; i < size; i++)
+    for(int x = 0; x < size; x++)
     {
         mBlockArray.push_back(xBlocks());
         
-        for(int j = 0; i < size; j++)
+        for(int y = 0; y < size; y++)
         {
-            mBlockArray[i].push_back(yBlocks());
+            mBlockArray[x].push_back(yBlocks());
             
-            for(int z = 0; i < size; z++)
+            for(int z = 0; z < size; z++)
             {
-                mBlockArray[i][j].push_back(zBlocks());
+                mBlockArray[x][y].push_back(std::make_shared<Block>(true));
             }
         }
     }
