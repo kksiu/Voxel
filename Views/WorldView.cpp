@@ -51,7 +51,7 @@ WorldView::~WorldView()
 }
 
 void WorldView::render()
-{   
+{
 	glm::mat4 camMatrix = mPlayer.getCamera();
 
 	//render everything in object list
@@ -86,7 +86,7 @@ void WorldView::render()
 		(void*)0
 		);
 
-	glDrawArrays(GL_TRIANGLES, 0, cube[0].size() * 3);
+	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)(cube[0].size() * 3));
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);

@@ -53,11 +53,7 @@ Game::Game(unsigned int width,
 	}
 
 	//error is when glew inits but it is normal
-	GLenum glErr = glGetError();
-	if (glErr != GL_NO_ERROR)
-	{
-		printf("ERROR: %s\n", gluErrorString(glErr));
-	}
+    glGetError();
 
 	mViewManager = std::make_shared<ViewManager>(mWindow);
 }

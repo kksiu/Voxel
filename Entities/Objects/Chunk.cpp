@@ -175,7 +175,7 @@ void Chunk::render(glm::mat4& projectionMatrix, glm::mat4& viewMatrix)
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
     
     //use draw arrays to draw the chunk
-    glDrawArrays(GL_TRIANGLES, 0, mVertexBuffer.size() * 3);
+    glDrawArrays(GL_TRIANGLES, 0, (GLsizei) (mVertexBuffer.size() * 3));
     
     //unbind vertex attribute arrays
     glDisableVertexAttribArray(0);
