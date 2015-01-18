@@ -10,7 +10,7 @@ class ShaderManager
 {
 public:
     //load and retrieve the shaders
-    void loadShader(std::string fileName, std::string keyName);
+    GLuint loadShader(std::string fileName, std::string keyName);
     
     GLuint getShader(std::string keyName);
     

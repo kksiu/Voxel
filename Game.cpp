@@ -52,6 +52,13 @@ Game::Game(unsigned int width,
 		printf("Error initializing GLEW! %s\n", glewGetErrorString(glewError));
 	}
 
+	//error is when glew inits but it is normal
+	GLenum glErr = glGetError();
+	if (glErr != GL_NO_ERROR)
+	{
+		printf("ERROR: %s\n", gluErrorString(glErr));
+	}
+
 	mViewManager = std::make_shared<ViewManager>(mWindow);
 }
 
@@ -69,20 +76,6 @@ void Game::run()
 	//Enable OpenGL functions
 	glEnable(GL_BLEND);
     
-    GLenum glErr = glGetError();
-    if (glErr != GL_NO_ERROR)
-    {
-        printf("glError: %s\n",
-               gluErrorString(glErr));
-    }
-    
-    glErr = glGetError();
-    if (glErr != GL_NO_ERROR)
-    {
-        printf("glError: %s\n",
-               gluErrorString(glErr));
-    }
-    
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//enable backface culling
@@ -95,10 +88,6 @@ void Game::run()
 
 	// set up the camera for drawing!
 	glEnable(GL_DEPTH_TEST);
-    
-	//enable lighting
-//	glEnable(GL_LIGHTING);
-//    glEnable(GL_LIGHT0);
 
     //event to use
     SDL_Event event;

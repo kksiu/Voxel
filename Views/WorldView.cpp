@@ -9,7 +9,16 @@
 
 #include "../Utils/DrawHelper.h"
 #include "../Handlers/InputHandler.h"
+#include "../Handlers/ShaderManager.h"
 #include "../Game.h"
+
+//test cube information
+GLuint vertexBuffer;
+GLuint normalBuffer;
+GLuint shaderID;
+GLuint pShader;
+GLuint vShader;
+std::vector<std::vector<glm::vec3>> cube;
 
 WorldView::WorldView(std::shared_ptr<SDL_Window> window)
 	: mPlayer(std::make_shared<Camera>(), window), testChunk(16, "Shader"), mWindow(window)
@@ -19,8 +28,22 @@ WorldView::WorldView(std::shared_ptr<SDL_Window> window)
 	float aspect = ((float)width / (float)height);
 	mProjectionMatrix = glm::perspective(glm::radians(45.f), aspect, 0.1f, 100.f);
 
-	//set the viewport of the screen
-	glViewport(0, 0, width, height);
+	//anything below this is for debug purposes (drawing a test cube)
+	cube = DrawHelper::drawFaces(.1f, glm::vec3(.0f, .0f, -2.f));
+
+	glGenBuffers(1, &vertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, cube[0].size() * sizeof(glm::vec3), &cube[0][0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &normalBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+	glBufferData(GL_ARRAY_BUFFER, cube[1].size() * sizeof(glm::vec3), &cube[1][0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	//get shader
+	shaderID = ShaderManager::getInstance().loadShader("Normal", "Shader");
+	pShader = glGetUniformLocation(shaderID, "MVP");
 }
 
 WorldView::~WorldView()
@@ -29,49 +52,46 @@ WorldView::~WorldView()
 
 void WorldView::render()
 {   
-    //set up projection
-    glMatrixMode(GL_PROJECTION);
-    glLoadMatrixf(glm::value_ptr(mProjectionMatrix));
-    
-    GLenum glErr = glGetError();
-    if (glErr != GL_NO_ERROR)
-    {
-        printf("glError: %s\n",
-               gluErrorString(glErr));
-    }
-
-//    GLfloat lightpos[] = {.5, 1., 0.5, 1.};
-//    glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
-    
-	//set up camera
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	//set the camera
 	glm::mat4 camMatrix = mPlayer.getCamera();
-	glMultMatrixf(glm::value_ptr(camMatrix));
-
-	//render objects
-	glColor3f(1.f, 0.f, 1.f);
-	
-	//test cube
-    std::vector<std::vector<glm::vec3>> cube = DrawHelper::drawFaces(.1f, glm::vec3(.0f, .0f, -2.f));
-
-	glBegin(GL_TRIANGLES);
-
-    for (size_t i = 0; i < cube[0].size(); i++)
-	{
-        glNormal3fv(glm::value_ptr(cube[1][i]));
-		glVertex3fv(glm::value_ptr(cube[0][i]));
-    }
-
-	glEnd();
 
 	//render everything in object list
 	for (std::shared_ptr<Object> object : mObjectList)
 	{
 		object->render(mProjectionMatrix, camMatrix);
 	}
+
+	//DEBUG PURPOSES
+	glUseProgram(shaderID);
+	glUniformMatrix4fv(pShader, 1, GL_FALSE, &(mProjectionMatrix * camMatrix)[0][0]);
+
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glVertexAttribPointer(
+		0,
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		0,
+		(void*)0
+		);
+
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+	glVertexAttribPointer(
+		1,
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		0,
+		(void*)0
+		);
+
+	glDrawArrays(GL_TRIANGLES, 0, cube[0].size() * 3);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+
+	glUseProgram(0);
 }
 
 void WorldView::update(Uint32 dt)
