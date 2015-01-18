@@ -32,6 +32,13 @@ void WorldView::render()
     //set up projection
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixf(glm::value_ptr(mProjectionMatrix));
+    
+    GLenum glErr = glGetError();
+    if (glErr != GL_NO_ERROR)
+    {
+        printf("glError: %s\n",
+               gluErrorString(glErr));
+    }
 
 //    GLfloat lightpos[] = {.5, 1., 0.5, 1.};
 //    glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
@@ -48,7 +55,7 @@ void WorldView::render()
 	glColor3f(1.f, 0.f, 1.f);
 	
 	//test cube
-    std::vector<std::vector<glm::vec3>> cube = DrawHelper::drawFaces(.1f, glm::vec3(.0f, .0f, -1.f));
+    std::vector<std::vector<glm::vec3>> cube = DrawHelper::drawFaces(.1f, glm::vec3(.0f, .0f, -2.f));
 
 	glBegin(GL_TRIANGLES);
 

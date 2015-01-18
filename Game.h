@@ -31,4 +31,6 @@ public:
 private:
     std::shared_ptr<SDL_Window> mWindow;
 	std::shared_ptr<ViewManager> mViewManager;
+    
+    SDL_GLContext mainContext;
 };

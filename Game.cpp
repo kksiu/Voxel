@@ -23,7 +23,13 @@ Game::Game(unsigned int width,
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    
+    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 
 	mWindow = std::shared_ptr<SDL_Window>(SDL_CreateWindow(title.c_str(),
 		SDL_WINDOWPOS_CENTERED,
@@ -34,8 +40,8 @@ Game::Game(unsigned int width,
 		[](SDL_Window* window) { SDL_DestroyWindow(window); }
 	);
 
-	SDL_GLContext mainContext = SDL_GL_CreateContext(mWindow.get());
-
+	mainContext = SDL_GL_CreateContext(mWindow.get());
+    
 	//Initialize GLEW
 	glewExperimental = GL_TRUE;
 
@@ -55,15 +61,33 @@ Game::~Game()
 
 void Game::run()
 {
+    //need to bind a vao for core profile
+    GLuint vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+    
 	//Enable OpenGL functions
-	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
-	glEnable(GL_ALPHA_TEST);
-	glAlphaFunc(GL_GREATER, 0.001f);
+    
+    GLenum glErr = glGetError();
+    if (glErr != GL_NO_ERROR)
+    {
+        printf("glError: %s\n",
+               gluErrorString(glErr));
+    }
+    
+    glErr = glGetError();
+    if (glErr != GL_NO_ERROR)
+    {
+        printf("glError: %s\n",
+               gluErrorString(glErr));
+    }
+    
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//enable backface culling
 	glEnable(GL_CULL_FACE);
+
 	glCullFace(GL_BACK);
 
 	//enable CCW as front face
@@ -71,7 +95,7 @@ void Game::run()
 
 	// set up the camera for drawing!
 	glEnable(GL_DEPTH_TEST);
-
+    
 	//enable lighting
 //	glEnable(GL_LIGHTING);
 //    glEnable(GL_LIGHT0);
