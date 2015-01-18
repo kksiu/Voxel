@@ -1,8 +1,8 @@
 #include "ViewManager.h"
 #include "../Views/WorldView.h"
 
-ViewManager::ViewManager(std::shared_ptr<sf::RenderWindow> window)
-: mWindow(window), viewStack()
+ViewManager::ViewManager(std::shared_ptr<SDL_Window> window)
+: viewStack(), mWindow(window)
 {
 	pushView(ViewEnum::World);
 }
@@ -12,7 +12,7 @@ ViewManager::~ViewManager()
 
 }
 
-void ViewManager::update(float dt)
+void ViewManager::update(Uint32 dt)
 {
 	viewStack.back()->update(dt);
 }
@@ -25,7 +25,7 @@ void ViewManager::render()
 	}
 }
 
-void ViewManager::handle(sf::Event event)
+void ViewManager::handle(SDL_Event& event)
 {
 	for (std::shared_ptr<View> view : viewStack)
 	{

@@ -10,7 +10,7 @@
 
 #include <glm/glm.hpp>
 
-#include <SFML/Window.hpp>
+#include <SDL.h>
 
 class Camera {
 public:

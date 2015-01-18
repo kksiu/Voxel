@@ -12,21 +12,31 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "../../Handlers/InputHandler.h"
+
 //set up the camera
-Player::Player(std::shared_ptr<Camera> camera, std::shared_ptr<sf::RenderWindow> window) :
+Player::Player(std::shared_ptr<Camera> camera, std::shared_ptr<SDL_Window> window) :
 	mModelMatrix(),
 	mCamera(camera),
 	mWindow(window)
 {
-	sf::Mouse::setPosition(sf::Vector2i(mWindow->getSize().x / 2, mWindow->getSize().y / 2), *mWindow);
+	SDL_GetWindowSize(window.get(), &width, &height);
+	
+	//set the width and height by 2 to get the center
+	width /= 2;
+	height /= 2;
+
+	SDL_WarpMouseInWindow(window.get(), width, height);
 }
 
 Player::~Player()
 {
 }
 
-void Player::update(float dt)
+void Player::update(Uint32 dt)
 {
+	float divide = 100000.f;
+
 	bool hasChanged = false;
 
 	glm::vec3 translate(0.f, 0.f, 0.f);
@@ -37,44 +47,50 @@ void Player::update(float dt)
 	glm::vec3 sideVec = glm::cross(mCamera->lookUp, frontVec);
 	sideVec = glm::normalize(sideVec);
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	if (InputHandler::getInstance().hasKey(SDL_SCANCODE_W))
 	{
-		translate += (dt * frontVec);
+		translate += frontVec;
 		hasChanged = true;
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	if (InputHandler::getInstance().hasKey(SDL_SCANCODE_A))
 	{
-		translate += (dt * sideVec);
+		translate += sideVec;
 		hasChanged = true;
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+	if (InputHandler::getInstance().hasKey(SDL_SCANCODE_S))
 	{
-		translate -= (dt * frontVec);
+		translate -= frontVec;
 		hasChanged = true;
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+	if (InputHandler::getInstance().hasKey(SDL_SCANCODE_D))
 	{
-		translate -= (dt * sideVec);
+		translate -= sideVec;
 		hasChanged = true;
 	}
+
 
 	if (hasChanged)
 	{
+		translate = glm::normalize(translate);
+		translate *= (dt / divide);
+
 		mCamera->translate(translate);
 	}
 
-	sf::Vector2i origPos = sf::Vector2i(mWindow->getSize().x / 2, mWindow->getSize().y / 2);
-	sf::Vector2i newPos = sf::Mouse::getPosition(*mWindow);
-	newPos -= origPos;
+	int nWidth, nHeight;
+	SDL_GetMouseState(&nWidth, &nHeight);
+
+	//get the distance between the two
+	glm::vec2 newPos(nWidth - width, nHeight - height);
 
 	//rotate based on these values
 	mCamera->rotateDirection((float)newPos.x);
 	mCamera->rotatePitch((float)newPos.y);
 
-	sf::Mouse::setPosition(origPos, *mWindow);
+	SDL_WarpMouseInWindow(mWindow.get(), width, height);
 }
 
 void Player::render(glm::mat4& projectionMatrix, glm::mat4& viewMatrix)
@@ -82,7 +98,7 @@ void Player::render(glm::mat4& projectionMatrix, glm::mat4& viewMatrix)
 
 }
 
-void Player::handle(sf::Event event)
+void Player::handle(SDL_Event& event)
 {
 }
 

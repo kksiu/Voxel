@@ -8,12 +8,19 @@
 #include <glm/gtx/string_cast.hpp>
 
 #include "../Utils/DrawHelper.h"
+#include "../Handlers/InputHandler.h"
+#include "../Game.h"
 
-WorldView::WorldView(std::shared_ptr<sf::RenderWindow> window)
-: mWindow(window), mPlayer(std::make_shared<Camera>(), window), testChunk(16, window, "Shader")
+WorldView::WorldView(std::shared_ptr<SDL_Window> window)
+	: mPlayer(std::make_shared<Camera>(), window), testChunk(16, "Shader"), mWindow(window)
 {
-	float aspect = ((float)window->getSize().x) / ((float)window->getSize().y);
+	SDL_GetWindowSize(window.get(), &width, &height);
+
+	float aspect = ((float)width / (float)height);
 	mProjectionMatrix = glm::perspective(glm::radians(45.f), aspect, 0.1f, 100.f);
+
+	//set the viewport of the screen
+	glViewport(0, 0, width, height);
 }
 
 WorldView::~WorldView()
@@ -22,8 +29,6 @@ WorldView::~WorldView()
 
 void WorldView::render()
 {   
-    glViewport(0, 0, mWindow->getSize().x, mWindow->getSize().y);
-    
     //set up projection
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixf(glm::value_ptr(mProjectionMatrix));
@@ -43,7 +48,7 @@ void WorldView::render()
 	glColor3f(1.f, 0.f, 1.f);
 	
 	//test cube
-    std::vector<std::vector<glm::vec3>> cube = DrawHelper::drawFaces(.1f, glm::vec3(0.f));
+    std::vector<std::vector<glm::vec3>> cube = DrawHelper::drawFaces(.1f, glm::vec3(.0f, .0f, -1.f));
 
 	glBegin(GL_TRIANGLES);
 
@@ -62,24 +67,45 @@ void WorldView::render()
 	}
 }
 
-void WorldView::update(float dt)
+void WorldView::update(Uint32 dt)
 {
-	if (mWindow->hasFocus())
+	if (hasFocus)
 	{
 		mPlayer.update(dt);
 	}
 }
 
-void WorldView::handle(sf::Event event)
+void WorldView::handle(SDL_Event& event)
 {
+
 	switch (event.type)
 	{
-		case sf::Event::KeyPressed:
+		case SDL_KEYDOWN:
 		{
 			//close the window if pressed escape
-			if (event.key.code == sf::Keyboard::Escape)
+			if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
 			{
-				mWindow->close();
+				Game::isRunning = false;
+			}
+
+			break;
+		}
+
+		case (SDL_WINDOWEVENT) :
+		{
+			switch (event.window.event)
+			{
+				case SDL_WINDOWEVENT_FOCUS_GAINED:
+				{
+					hasFocus = true;
+					break;
+				}
+
+				case SDL_WINDOWEVENT_FOCUS_LOST:
+				{
+					hasFocus = false;
+					break;
+				}
 			}
 
 			break;

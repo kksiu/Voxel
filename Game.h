@@ -11,29 +11,24 @@
 #include <stdio.h>
 #include <memory>
 
-#include <SFML/Graphics.hpp>
+#include <SDL.h>
 
 #include "Handlers/InputHandler.h"
 #include "Handlers/ViewManager.h"
-
-#include "Utils/FPS.h"
 
 class Game
 {
 public:
     Game(unsigned int width,
          unsigned int height,
-         std::string title,
-         sf::ContextSettings settings);
+         std::string title);
     ~Game();
     
     void run();
+
+	static bool isRunning;
     
 private:
-    std::shared_ptr<sf::RenderWindow> mWindow;
-    std::shared_ptr<InputHandler> mMainInputHandler;
+    std::shared_ptr<SDL_Window> mWindow;
 	std::shared_ptr<ViewManager> mViewManager;
-
-	//calculate FPS
-	FPS fps;
 };

@@ -10,18 +10,30 @@
 
 #include <stdio.h>
 #include <memory>
+#include <map>
 
-#include <SFML/Graphics.hpp>
+#include <SDL.h>
 
 class InputHandler
 {    
 public:
-    InputHandler(std::shared_ptr<sf::RenderWindow> window);
+    InputHandler();
     ~InputHandler();
     
     //handle function
-    void handle(sf::Event event);
+    void handle(SDL_Event& event);
+
+	static InputHandler& getInstance()
+	{
+		static InputHandler instance;
+		return instance;
+	}
+
+	bool hasKey(SDL_Keycode keyCode)
+	{
+		return mMapOfKeys[keyCode];
+	}
     
 private:
-    std::shared_ptr<sf::RenderWindow> mWindow;
+	std::map<SDL_Keycode, bool> mMapOfKeys;
 };

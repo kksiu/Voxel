@@ -17,13 +17,13 @@
 //special type of camera which has 
 class Player : public Object {
 public:
-	Player(std::shared_ptr<Camera> camera, std::shared_ptr<sf::RenderWindow> window);
+	Player(std::shared_ptr<Camera> camera, std::shared_ptr<SDL_Window> window);
 	~Player();
 
 	//Object functions
-    virtual void update(float dt);
+    virtual void update(Uint32 dt);
 	virtual void render(glm::mat4& projectionMatrix, glm::mat4& viewMatrix);
-    virtual void handle(sf::Event event);
+    virtual void handle(SDL_Event& event);
     
 	//this will return the camera connected to this player
 	virtual glm::mat4 getCamera();
@@ -31,6 +31,11 @@ public:
     glm::mat4 mModelMatrix;
 
 private:
+	std::shared_ptr<SDL_Window> mWindow;
+
 	std::shared_ptr<Camera> mCamera;
-	std::shared_ptr<sf::RenderWindow> mWindow;
+
+	//width and height of window
+	int width;
+	int height;
 };

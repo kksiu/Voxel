@@ -7,9 +7,9 @@
 //
 
 #include "InputHandler.h"
+#include "../Game.h"
 
-InputHandler::InputHandler(std::shared_ptr<sf::RenderWindow> window)
-: mWindow(window)
+InputHandler::InputHandler()
 {
 }
 
@@ -18,19 +18,32 @@ InputHandler::~InputHandler()
     
 }
 
-void InputHandler::handle(sf::Event event)
+void InputHandler::handle(SDL_Event& event)
 {
-    switch(event.type)
-    {
-        case sf::Event::Closed:
-        {
-            mWindow->close();
-            break;
-        }
-            
-        default:
-        {
-            break;
-        }
-    }
+	//input handler will see when keys are pressed up or down
+	switch (event.type)
+	{
+		case SDL_QUIT:
+		{
+			Game::isRunning = false;
+			break;
+		}
+
+		case SDL_KEYDOWN:
+		{
+			mMapOfKeys[event.key.keysym.scancode] = true;
+			break;
+		}
+
+		case SDL_KEYUP:
+		{
+			mMapOfKeys[event.key.keysym.scancode] = false;
+			break;
+		}
+
+		default:
+		{
+			break;
+		}
+	}
 }

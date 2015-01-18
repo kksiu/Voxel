@@ -12,23 +12,40 @@
 
 #include <GL/glew.h>
 
+bool Game::isRunning = false;
+
 Game::Game(unsigned int width,
            unsigned int height,
-           std::string title,
-           sf::ContextSettings settings)
-: fps()
+           std::string title)
 {
-    mWindow = std::make_shared<sf::RenderWindow>(sf::VideoMode(width, height), title, sf::Style::Default, settings);
+	//init SDL
+	SDL_Init(SDL_INIT_EVERYTHING);
 
-	GLenum error = glewInit();
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-	//check if glew init has failed
-	if (GLEW_OK != error)
+	mWindow = std::shared_ptr<SDL_Window>(SDL_CreateWindow(title.c_str(),
+		SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED,
+		1024,
+		768,
+		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN),
+		[](SDL_Window* window) { SDL_DestroyWindow(window); }
+	);
+
+	SDL_GLContext mainContext = SDL_GL_CreateContext(mWindow.get());
+
+	//Initialize GLEW
+	glewExperimental = GL_TRUE;
+
+	GLenum glewError = glewInit();
+
+	if (glewError != GLEW_OK)
 	{
-		std::cout << "Error with GLEW: " << glewGetErrorString(error) << std::endl;
+		printf("Error initializing GLEW! %s\n", glewGetErrorString(glewError));
 	}
 
-    mMainInputHandler = std::make_shared<InputHandler>(mWindow);
 	mViewManager = std::make_shared<ViewManager>(mWindow);
 }
 
@@ -60,23 +77,26 @@ void Game::run()
 //    glEnable(GL_LIGHT0);
 
     //event to use
-    sf::Event event;
+    SDL_Event event;
 
-	sf::Clock deltaClock;
+	isRunning = true;
+
+	Uint32 dt = SDL_GetTicks();
     
     //run game while window is open
-    while(mWindow->isOpen())
+    while(isRunning)
     {
         //check for events
-        while(mWindow->pollEvent(event))
+        while(SDL_PollEvent(&event))
         {
             //handle events
-            mMainInputHandler->handle(event);
+            InputHandler::getInstance().handle(event);
 			mViewManager->handle(event);
         }
         
         //update views
-		float dt = deltaClock.restart().asSeconds();
+		dt = SDL_GetTicks() - dt;
+
 		mViewManager->update(dt);
 
         //clear window
@@ -86,10 +106,8 @@ void Game::run()
 		mViewManager->render();
         
         //switch display buffers
-        mWindow->display();
-
-		std::cout << fps.getFPS() << std::endl;
-
-		fps.update();
+		SDL_GL_SwapWindow(mWindow.get());
     }
+
+	SDL_Quit();
 }

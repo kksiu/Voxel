@@ -12,10 +12,8 @@
 #include "../../Utils/DrawHelper.h"
 
 Chunk::Chunk(int size,
-             std::shared_ptr<sf::RenderWindow> window,
              std::string shader)
 : mSize(size),
-mWindow(window),
 mModelMatrix(glm::mat4(1.f))
 {
     //create the block array
@@ -38,7 +36,7 @@ mModelMatrix(glm::mat4(1.f))
     }
     
     //load the shader
-    mShaderID = ShaderManager::getInstance().getGLShader(shader);
+    mShaderID = ShaderManager::getInstance().getShader(shader);
     
     //set up a vertex buffer with the max size vertices
     //that would be 8 x size^3
@@ -67,7 +65,7 @@ Chunk::~Chunk()
 {
 }
 
-void Chunk::update(float dt)
+void Chunk::update(Uint32 dt)
 {
 }
 
@@ -187,7 +185,7 @@ void Chunk::render(glm::mat4& projectionMatrix, glm::mat4& viewMatrix)
     glUseProgram(0);
 }
 
-void Chunk::handle(sf::Event event)
+void Chunk::handle(SDL_Event& event)
 {
 }
 

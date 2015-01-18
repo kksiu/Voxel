@@ -10,9 +10,11 @@
 
 #include <stdio.h>
 #include <memory>
+#include <string>
+#include <vector>
 
 #include <GL/glew.h>
-#include <SFML/Graphics.hpp>
+#include <SDL.h>
 
 #include "../Block.h"
 #include "Object.h"
@@ -23,13 +25,13 @@ typedef std::vector<std::shared_ptr<Block>> yBlocks;
 
 class Chunk : public Object {
 public:
-    Chunk(int size, std::shared_ptr<sf::RenderWindow> window, std::string shader);
+    Chunk(int size, std::string shader);
     ~Chunk();
     
-    virtual void update(float dt);
+    virtual void update(Uint32 dt);
     virtual void updateChunks();
 	virtual void render(glm::mat4& projectionMatrix, glm::mat4& viewMatrix);
-	virtual void handle(sf::Event event);
+	virtual void handle(SDL_Event& event);
     
     //size of the chunks
     void setChunkSize(int size);
@@ -41,7 +43,6 @@ public:
 private:
     //chunk size
     unsigned int mSize;
-    std::shared_ptr<sf::RenderWindow> mWindow;
     Blocks mBlockArray;
     
     //OPENGL

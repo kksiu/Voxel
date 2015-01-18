@@ -17,30 +17,12 @@ ShaderManager::~ShaderManager()
 
 void ShaderManager::loadShader(std::string fileName, std::string keyName)
 {
-    std::shared_ptr<sf::Shader> shader = std::make_shared<sf::Shader>();
-    
-    //shader loading passed
-    if(shader->loadFromFile("./Shaders/" + fileName + ".vert",
-                         "./Shaders/" + fileName + ".frag"))
-    {
-        //add to list
-        mSFMLShaders[keyName] = shader;
-    }
-}
-
-void ShaderManager::loadGLShader(std::string fileName, std::string keyName)
-{
     mGLShaders[keyName] = loadGLShaderHelper("./Shaders/" + fileName + ".vert", "./Shaders/" + fileName + ".vert");
 }
 
-GLuint ShaderManager::getGLShader(std::string keyName)
+GLuint ShaderManager::getShader(std::string keyName)
 {
     return mGLShaders[keyName];
-}
-
-std::shared_ptr<sf::Shader> ShaderManager::getShader(std::string keyName)
-{
-    return mSFMLShaders[keyName];
 }
 
 GLuint ShaderManager::loadGLShaderHelper(std::string vert, std::string frag)
