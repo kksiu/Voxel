@@ -39,18 +39,20 @@ mModelMatrix(glm::mat4(1.f))
     mShaderID = ShaderManager::getInstance().getShader(shader);
     
     //set up a vertex buffer with the max size vertices
-    //that would be 8 x size^3
-    uint32_t maxSize = 6 * mSize * mSize * mSize;
+    //that would be the size of the cube (mSize ^ 3) multiplied the amount it takes to make one face
+	//which is 6, as well as the amount of faces a cube can have (also 6), and then also multiplied with
+	//the size of vec3
+    uint32_t maxSize = 36 * mSize * mSize * mSize * sizeof(glm::vec3);
     
     //now that max size is known, generate a buffer
     glGenBuffers(1, &mVertexBufferID);
     glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferID);
     glBufferData(GL_ARRAY_BUFFER, maxSize,
-                 NULL, GL_DYNAMIC_DRAW);
+                 NULL, GL_STATIC_DRAW);
     
     glGenBuffers(1, &mNormalBufferID);
     glBindBuffer(GL_ARRAY_BUFFER, mNormalBufferID);
-    glBufferData(GL_ARRAY_BUFFER, maxSize, NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, maxSize, NULL, GL_STATIC_DRAW);
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
@@ -148,18 +150,16 @@ void Chunk::updateChunks()
     }
     
     GLsizeiptr size = mVertexBuffer.size() * sizeof(glm::vec3);
-    
+
     //at the end, buffer data from both vertex and normal
     //so that they can be used the next time the chunk is rendered
-    glBufferSubData(mVertexBufferID, 0, size, &mVertexBuffer[0]);
-    glBufferSubData(mNormalBufferID, 0, size, &mNormalBuffer[0]);
-    
-    GLenum err = glGetError();
-    
-    if(err != GL_NO_ERROR)
-    {
-        printf("ERROR: %s\n", gluErrorString(err));
-    }
+	glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferID);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, size, &mVertexBuffer[0]);
+
+	glBindBuffer(GL_ARRAY_BUFFER, mNormalBufferID);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, size, &mNormalBuffer[0]);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void Chunk::render(glm::mat4& projectionMatrix, glm::mat4& viewMatrix)
