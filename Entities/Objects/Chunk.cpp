@@ -11,11 +11,16 @@
 #include "../../Handlers/ShaderManager.h"
 #include "../../Utils/DrawHelper.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 Chunk::Chunk(int size,
              std::string shader)
 : mSize(size),
 mModelMatrix(glm::mat4(1.f))
 {
+	//set model matrix to scale it down by 10
+	mModelMatrix = glm::scale(mModelMatrix, glm::vec3(0.1f));
+
     //create the block array
     mBlockArray = Blocks();
     
@@ -59,6 +64,7 @@ mModelMatrix(glm::mat4(1.f))
     //get shader information of the projection and view matrix
     mProjID = glGetUniformLocation(mShaderID, "P");
     mViewID = glGetUniformLocation(mShaderID, "V");
+	mModelID = glGetUniformLocation(mShaderID, "M");
     
     updateChunks();
 }
@@ -171,7 +177,8 @@ void Chunk::render(glm::mat4& projectionMatrix, glm::mat4& viewMatrix)
     //set projection and view matrix
     glUniformMatrix4fv(mProjID, 1, GL_FALSE, &projectionMatrix[0][0]);
     glUniformMatrix4fv(mViewID, 1, GL_FALSE, &viewMatrix[0][0]);
-    
+	glUniformMatrix4fv(mModelID, 1, GL_FALSE, &mModelMatrix[0][0]);
+
     //use vertex attribute arrays
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferID);
@@ -182,7 +189,7 @@ void Chunk::render(glm::mat4& projectionMatrix, glm::mat4& viewMatrix)
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
     
     //use draw arrays to draw the chunk
-    glDrawArrays(GL_TRIANGLES, 0, (GLsizei) (mVertexBuffer.size() * 3));
+    glDrawArrays(GL_TRIANGLES, 0, (GLsizei)mVertexBuffer.size());
     
     //unbind vertex attribute arrays
     glDisableVertexAttribArray(0);

@@ -60,4 +60,5 @@ private:
     //view and projection matrix
     GLuint mProjID;
     GLuint mViewID;
+	GLuint mModelID;
 };

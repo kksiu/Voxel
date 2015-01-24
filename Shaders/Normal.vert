@@ -5,8 +5,9 @@ layout(location = 1) in vec3 normal;
 
 uniform mat4 P;
 uniform mat4 V;
+uniform mat4 M;
 
 void main(){	
-	gl_Position =  P * V * vec4(vertex,1);
+	gl_Position =  P * V * M *vec4(vertex,1);
 }
 

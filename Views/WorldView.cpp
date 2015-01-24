@@ -12,14 +12,6 @@
 #include "../Handlers/ShaderManager.h"
 #include "../Game.h"
 
-//test cube information
-GLuint vertexBuffer;
-GLuint normalBuffer;
-GLuint shaderID;
-GLuint pShader;
-GLuint vShader;
-std::vector<std::vector<glm::vec3>> cube;
-
 WorldView::WorldView(std::shared_ptr<SDL_Window> window)
 	: mPlayer(std::make_shared<Camera>(), window), testChunk(16, "RegularShader"), mWindow(window)
 {
@@ -27,24 +19,6 @@ WorldView::WorldView(std::shared_ptr<SDL_Window> window)
 
 	float aspect = ((float)width / (float)height);
 	mProjectionMatrix = glm::perspective(glm::radians(45.f), aspect, 0.1f, 100.f);
-
-	//anything below this is for debug purposes (drawing a test cube)
-	cube = DrawHelper::drawFaces(.1f, glm::vec3(.0f, .0f, -2.f));
-
-	glGenBuffers(1, &vertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, cube[0].size() * sizeof(glm::vec3), &cube[0][0], GL_STATIC_DRAW);
-
-	glGenBuffers(1, &normalBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
-	glBufferData(GL_ARRAY_BUFFER, cube[1].size() * sizeof(glm::vec3), &cube[1][0], GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	//get shader
-    shaderID = ShaderManager::getInstance().getShader("RegularShader");
-	pShader = glGetUniformLocation(shaderID, "P");
-    vShader = glGetUniformLocation(shaderID, "V");
 }
 
 WorldView::~WorldView()
@@ -62,40 +36,6 @@ void WorldView::render()
 	}
     
     testChunk.render(mProjectionMatrix, camMatrix);
-
-	//DEBUG PURPOSES
-//	glUseProgram(shaderID);
-//	glUniformMatrix4fv(pShader, 1, GL_FALSE, &mProjectionMatrix[0][0]);
-//    glUniformMatrix4fv(vShader, 1, GL_FALSE, &camMatrix[0][0]);
-//
-//	glEnableVertexAttribArray(0);
-//	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-//	glVertexAttribPointer(
-//		0,
-//		3,
-//		GL_FLOAT,
-//		GL_FALSE,
-//		0,
-//		(void*)0
-//		);
-//
-//	glEnableVertexAttribArray(1);
-//	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
-//	glVertexAttribPointer(
-//		1,
-//		3,
-//		GL_FLOAT,
-//		GL_FALSE,
-//		0,
-//		(void*)0
-//		);
-//
-//	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)(cube[0].size() * 3));
-//
-//	glDisableVertexAttribArray(0);
-//	glDisableVertexAttribArray(1);
-//
-//	glUseProgram(0);
 }
 
 void WorldView::update(Uint32 dt)
