@@ -8,6 +8,8 @@
 
 ShaderManager::ShaderManager()
 {
+    loadShaders();
+
 }
 
 
@@ -20,7 +22,7 @@ GLuint ShaderManager::loadShader(std::string fileName, std::string keyName)
 	GLuint shader = loadGLShaderHelper("./Shaders/" + fileName + ".vert",
 		"./Shaders/" + fileName + ".frag");
 	mGLShaders[keyName] = shader;
-
+    
 	return shader;
 }
 
@@ -44,7 +46,7 @@ GLuint ShaderManager::loadGLShaderHelper(std::string vert, std::string frag)
     int logLength;
     
     // Compile vertex shader
-    std::cout << "Compiling vertex shader: " << vert << std::endl;
+    std::cout << "Compiling vertex shader: " << vert;
     glShaderSource(vertShader, 1, &vertShaderSrc, NULL);
     glCompileShader(vertShader);
     
@@ -56,7 +58,7 @@ GLuint ShaderManager::loadGLShaderHelper(std::string vert, std::string frag)
     std::cout << &vertShaderError[0] << std::endl;
     
     // Compile fragment shader
-    std::cout << "Compiling fragment shader: " << frag << std::endl;
+    std::cout << "Compiling fragment shader: " << frag;
     glShaderSource(fragShader, 1, &fragShaderSrc, NULL);
     glCompileShader(fragShader);
     
@@ -103,4 +105,9 @@ std::string ShaderManager::readFile(const char* filePath)
     
     fileStream.close();
     return content;
+}
+
+void ShaderManager::loadShaders()
+{
+    loadShader("Normal", "RegularShader");
 }

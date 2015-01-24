@@ -40,7 +40,7 @@ mModelMatrix(glm::mat4(1.f))
     
     //set up a vertex buffer with the max size vertices
     //that would be 8 x size^3
-    uint32_t maxSize = 8 * mSize * mSize * mSize;
+    uint32_t maxSize = 6 * mSize * mSize * mSize;
     
     //now that max size is known, generate a buffer
     glGenBuffers(1, &mVertexBufferID);
@@ -147,12 +147,19 @@ void Chunk::updateChunks()
         }
     }
     
-    GLsizeiptr size = mVertexBuffer.size() * 3;
+    GLsizeiptr size = mVertexBuffer.size() * sizeof(glm::vec3);
     
     //at the end, buffer data from both vertex and normal
     //so that they can be used the next time the chunk is rendered
     glBufferSubData(mVertexBufferID, 0, size, &mVertexBuffer[0]);
     glBufferSubData(mNormalBufferID, 0, size, &mNormalBuffer[0]);
+    
+    GLenum err = glGetError();
+    
+    if(err != GL_NO_ERROR)
+    {
+        printf("ERROR: %s\n", gluErrorString(err));
+    }
 }
 
 void Chunk::render(glm::mat4& projectionMatrix, glm::mat4& viewMatrix)
