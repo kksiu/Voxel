@@ -1,8 +1,5 @@
 #include <string>
 
-#include <GL/glew.h>
-#include <SDL.h>
-
 #include "Game.h"
 
 int main(int argc, char *args[])

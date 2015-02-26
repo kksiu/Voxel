@@ -2,14 +2,11 @@
 
 #include <iostream>
 
-#include <GL/glew.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include "../Utils/DrawHelper.h"
 #include "../Handlers/InputHandler.h"
-#include "../Handlers/ShaderManager.h"
 #include "../Game.h"
 
 WorldView::WorldView(std::shared_ptr<SDL_Window> window)

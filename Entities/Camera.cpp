@@ -8,8 +8,6 @@
 
 #include "Camera.h"
 
-#include <iostream>
-
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -23,7 +21,7 @@ Camera::~Camera()
 {
 }
 
-void Camera::translate(glm::vec3(translate))
+void Camera::translate(glm::vec3 translate)
 {
 	lookFrom += translate;
 }
