@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <memory>
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #include "Handlers/InputHandler.h"
 #include "Handlers/ViewManager.h"
